@@ -1,4 +1,4 @@
-package healthy_api
+package main
 
 import (
 	"github.com/gin-gonic/gin"
@@ -18,5 +18,5 @@ func main() {
 	blood := r.Group("/blood")
 	router.BloodRouter(blood)
 
-	r.Run(":9999")
+	r.Run()
 }
