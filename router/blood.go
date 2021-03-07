@@ -10,4 +10,5 @@ func BloodRouter(group *gin.RouterGroup) {
 	controller := controllers.NewBloodController()
 
 	group.GET("/", controller.Index)
+	group.DELETE("/:id", controller.Delete)
 }

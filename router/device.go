@@ -11,5 +11,6 @@ func DeviceRouter(group *gin.RouterGroup) {
 
 	deviceGroup := group.Group("/:deviceid")
 
-	deviceGroup.GET("/blood", bloodController.Index)
+	deviceGroup.GET("/bloods", bloodController.Index)
+	deviceGroup.DELETE("/bloods/:id", bloodController.Delete)
 }

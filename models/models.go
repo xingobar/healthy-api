@@ -19,6 +19,7 @@ func init() {
 	}
 }
 
+// 分頁
 func Paginate(r *http.Request) func(db *gorm.DB) *gorm.DB{
 	return func(db *gorm.DB) *gorm.DB {
 		page, _ := strconv.Atoi(r.URL.Query().Get("page"))
