@@ -16,7 +16,7 @@ func NewController() *bloodController{
 
 func (c *bloodController) Index(ctx *gin.Context) {
 	var bloods []models.Blood
-	models.Db.Model(&models.Blood{}).Find(&bloods)
+	models.Db.Model(&models.Blood{}).Scopes(models.Paginate(ctx.Request)).Find(&bloods)
 
 	ctx.JSON(http.StatusOK, bloods)
 }
