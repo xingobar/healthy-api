@@ -55,3 +55,17 @@ func (c *bloodController) Delete(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{})
 	}
 }
+
+// 顯示血壓紀錄
+func (c *bloodController) Show(ctx *gin.Context) {
+	var blood models.Blood
+
+	if err := models.Db.Model(&models.Blood{}).
+		Where("device_id = ? AND id = ?", ctx.Param("deviceid"), ctx.Param("id")).
+		First(&blood).Error; err != nil {
+		ctx.JSON(http.StatusNotFound, gorm.ErrRecordNotFound)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, blood)
+}
