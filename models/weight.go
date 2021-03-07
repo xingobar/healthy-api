@@ -1,6 +1,9 @@
 package models
 
-import "time"
+import (
+	"github.com/jinzhu/gorm"
+	"time"
+)
 
 type Weight struct {
 	ID int `gorm:"primaryKey;autoIncrement" json:"id" db:"id"`
@@ -12,4 +15,10 @@ type Weight struct {
 
 func (Weight) TableName() string {
 	return "weights"
+}
+
+func (w *Weight) GetWeight(deviceId string, id string) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Where("device_id = ? AND id = ?", deviceId, id)
+	}
 }
