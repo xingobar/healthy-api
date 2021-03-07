@@ -47,7 +47,7 @@ func (c *bloodController) Delete(ctx *gin.Context) {
 	var blood models.Blood
 
 	if err := models.Db.Model(&models.Blood{}).
-			Where(" id = ? AND device_id = ? ", ctx.Param("id"), ctx.Param("deviceid")).
+			Scopes((&models.Blood{}).GetBlood(ctx.Param("deviceid"), ctx.Param("id"))).
 			First(&blood).Error; err != nil {
 		ctx.JSON(http.StatusNotFound, gorm.ErrRecordNotFound)
 	} else {
@@ -61,7 +61,7 @@ func (c *bloodController) Show(ctx *gin.Context) {
 	var blood models.Blood
 
 	if err := models.Db.Model(&models.Blood{}).
-		Where("device_id = ? AND id = ?", ctx.Param("deviceid"), ctx.Param("id")).
+		Scopes((&models.Blood{}).GetBlood(ctx.Param("deviceid"), ctx.Param("id"))).
 		First(&blood).Error; err != nil {
 		ctx.JSON(http.StatusNotFound, gorm.ErrRecordNotFound)
 		return

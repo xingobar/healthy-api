@@ -1,6 +1,9 @@
 package models
 
-import "time"
+import (
+	"github.com/jinzhu/gorm"
+	"time"
+)
 
 type Blood struct {
 	ID int `json:"id" gorm:"primaryKey;autoIncrement" db:"id"`
@@ -14,4 +17,11 @@ type Blood struct {
 
 func (Blood) TableName() string {
 	return "bloods"
+}
+
+// 取得血壓
+func (b *Blood) GetBlood(deviceId string, id string) func (db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Where("device_id = ? AND id = ?", deviceId, id)
+	}
 }
