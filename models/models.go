@@ -9,6 +9,8 @@ import (
 
 var Db *gorm.DB
 
+// https://www.artacode.com/posts/sql/gorm-err/
+
 func init() {
 	var err error
 
