@@ -7,7 +7,7 @@ import (
 
 func BloodRouter(group *gin.RouterGroup) {
 
-	controller := controllers.NewController()
+	controller := controllers.NewBloodController()
 
 	group.GET("/", controller.Index)
 }

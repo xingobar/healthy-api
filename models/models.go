@@ -1,9 +1,8 @@
 package models
 
 import (
-	"fmt"
-	"github.com/jinzhu/gorm"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/jinzhu/gorm"
 	"net/http"
 	"strconv"
 )
@@ -23,8 +22,6 @@ func init() {
 func Paginate(r *http.Request) func(db *gorm.DB) *gorm.DB{
 	return func(db *gorm.DB) *gorm.DB {
 		page, _ := strconv.Atoi(r.URL.Query().Get("page"))
-
-		fmt.Printf("page %d", page)
 
 		if page == 0 {
 			page = 1

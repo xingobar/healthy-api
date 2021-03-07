@@ -15,8 +15,13 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	blood := r.Group("/blood")
-	router.BloodRouter(blood)
+	// 血壓紀錄
+	//blood := r.Group("/blood")
+	//router.BloodRouter(blood)
+
+	// 設備
+	device := r.Group("/device")
+	router.DeviceRouter(device)
 
 	r.Run()
 }
