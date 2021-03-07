@@ -12,7 +12,7 @@ var Db *gorm.DB
 func init() {
 	var err error
 
-	Db, err = gorm.Open("mysql", "root:@/healthy?parseTime=true")
+	Db, err = gorm.Open("mysql", "root:@/healthy?charset=utf8&parseTime=true")
 
 	if err != nil {
 		panic(err.Error())

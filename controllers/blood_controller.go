@@ -1,12 +1,12 @@
 package controllers
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator"
 	"github.com/jinzhu/gorm"
 	"healthy-api/models"
 	"healthy-api/validation"
+	"healthy-api/validation/blood_validation"
 	"net/http"
 	"strconv"
 )
@@ -73,21 +73,12 @@ func (c *bloodController) Show(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, blood)
 }
 
+// 更新
 func (c *bloodController) Update(ctx *gin.Context) {
 
 	var blood models.Blood
 
-	var json struct{
-		Pulse int  `json:"pulse" form:"id" binding:"required"`
-		Diastolic float32 `json:"diastolic" form:"diastolic" binding:"required"`
-		Systolic float32 `json:"systolic" form:"systolic" binding:"required"`
-	}
-
-	message := map[string]string{
-		"Pulse.required": "請輸入脈搏資料",
-		"Diastolic.required": "請輸入舒張壓",
-		"Systolic.required": "請輸入收縮壓",
-	}
+	v := blood_validation.NewValidation()
 
 	if err := models.Db.Model(&models.Blood{}).
 		Scopes((&models.Blood{}).GetBlood(ctx.Param("deviceid"), ctx.Param("id"))).
@@ -97,11 +88,11 @@ func (c *bloodController) Update(ctx *gin.Context) {
 			return
 	}
 
-    if err := ctx.ShouldBindJSON(&json); err != nil {
-    	fmt.Println(json)
+    json := blood_validation.GetUpdateRule{}
 
+    if err := ctx.ShouldBindJSON(&json); err != nil {
     	ctx.JSON(http.StatusBadRequest, gin.H{
-    		"msg": validation.GetError(err.(validator.ValidationErrors), message),
+    		"msg": validation.GetError(err.(validator.ValidationErrors), v.GetMessage()),
 		})
     	return
 	}
@@ -112,4 +103,31 @@ func (c *bloodController) Update(ctx *gin.Context) {
 	}
 
     ctx.JSON(http.StatusOK, gin.H{})
+}
+
+func (c *bloodController) Store(ctx *gin.Context) {
+
+	v := blood_validation.NewValidation()
+
+	json := blood_validation.GetStoreRule{}
+
+	if err := ctx.ShouldBindJSON(&json); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"msg": validation.GetError(err.(validator.ValidationErrors), v.GetMessage()),
+		})
+		return
+	}
+
+	if err := models.Db.Create(&models.Blood{
+		Pulse: json.Pulse,
+		Diastolic:json.Diastolic,
+		Systolic: json.Systolic,
+		DeviceId: ctx.Param("deviceid"),
+	}).Error; err != nil {
+
+		ctx.JSON(http.StatusBadGateway, gin.H{})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{})
 }

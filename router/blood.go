@@ -13,4 +13,5 @@ func BloodRouter(group *gin.RouterGroup) {
 	group.DELETE("/:id", controller.Delete)
 	group.GET("/:id", controller.Show)
 	group.PUT("/:id", controller.Update)
+	group.POST("/", controller.Store)
 }
