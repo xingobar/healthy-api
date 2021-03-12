@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 	"healthy-api/models"
 	"net/http"
 	"strconv"
@@ -47,4 +48,18 @@ func (c *weightController) Index(ctx *gin.Context) {
 			"page": page,
 		},
 	})
+}
+
+//  顯示
+func (c *weightController) Show(ctx *gin.Context) {
+	var weight models.Weight
+
+	if err := models.Db.Model(&models.Weight{}).
+		Scopes((&models.Weight{}).GetWeight(ctx.Param("deviceid"), ctx.Param("id"))).
+		First(&weight).Error; err != nil {
+			ctx.JSON(http.StatusNotExtended, gorm.ErrRecordNotFound)
+			return
+	}
+
+	ctx.JSON(http.StatusOK, weight)
 }
