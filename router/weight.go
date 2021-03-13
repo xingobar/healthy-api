@@ -13,4 +13,5 @@ func WeightRouter(group *gin.RouterGroup) {
 	group.GET("/:id", controller.Show)
 	group.PUT("/:id", controller.Update)
 	group.POST("/", controller.Store)
+	group.DELETE("/:id", controller.Delete)
 }

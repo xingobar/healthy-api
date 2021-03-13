@@ -110,6 +110,7 @@ func (c *weightController) Store(ctx *gin.Context) {
 
 	weight := models.Weight{
 		Number: json.Number,
+		DeviceId:ctx.Param("deviceid"),
 	}
 
 	if err := models.Db.Create(&weight).Error; err != nil {
@@ -118,4 +119,21 @@ func (c *weightController) Store(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, weight)
+}
+
+func (c *weightController) Delete(ctx *gin.Context) {
+
+	var weight models.Weight
+
+	if err := models.Db.Model(&models.Weight{}).
+		Scopes((&models.Weight{}).GetWeight(ctx.Param("deviceid"), ctx.Param("id"))).
+		First(&weight).Error; err != nil {
+			ctx.JSON(http.StatusNotFound, gorm.ErrRecordNotFound)
+			return
+	} else {
+		models.Db.Delete(&weight, ctx.Param("id"))
+
+		ctx.JSON(http.StatusOK, weight)
+		return
+	}
 }
