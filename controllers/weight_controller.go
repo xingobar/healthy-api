@@ -2,8 +2,11 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator"
 	"github.com/jinzhu/gorm"
 	"healthy-api/models"
+	"healthy-api/validation"
+	"healthy-api/validation/weight_validation"
 	"net/http"
 	"strconv"
 )
@@ -59,6 +62,34 @@ func (c *weightController) Show(ctx *gin.Context) {
 		First(&weight).Error; err != nil {
 			ctx.JSON(http.StatusNotExtended, gorm.ErrRecordNotFound)
 			return
+	}
+
+	ctx.JSON(http.StatusOK, weight)
+}
+
+func (c *weightController) Update(ctx *gin.Context) {
+	var weight models.Weight
+	v := weight_validation.NewValidation()
+
+	json := weight_validation.GetUpdateRule{}
+	if err := ctx.ShouldBindJSON(&json); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"msg": validation.GetError(err.(validator.ValidationErrors), v.GetMessage()),
+		})
+		return
+	}
+
+	if err := models.Db.Model(&models.Weight{}).
+		Scopes((&models.Weight{}).GetWeight(ctx.Param("deviceid"), ctx.Param("id"))).
+		First(&weight).Error; err != nil {
+
+			ctx.JSON(http.StatusNotFound, gorm.ErrRecordNotFound)
+			return
+	}
+
+	if err := models.Db.Model(&weight).Update(json).Error; err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
 	}
 
 	ctx.JSON(http.StatusOK, weight)
