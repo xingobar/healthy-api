@@ -94,3 +94,28 @@ func (c *weightController) Update(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, weight)
 }
+
+func (c *weightController) Store(ctx *gin.Context) {
+
+	v := weight_validation.NewValidation()
+
+	json := weight_validation.GetStoreRule{}
+
+	if err := ctx.ShouldBindJSON(&json); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"msg": validation.GetError(err.(validator.ValidationErrors), v.GetMessage()),
+		})
+		return
+	}
+
+	weight := models.Weight{
+		Number: json.Number,
+	}
+
+	if err := models.Db.Create(&weight).Error; err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, weight)
+}

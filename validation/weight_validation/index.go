@@ -15,5 +15,9 @@ func (v *validation) GetMessage() map[string]string {
 }
 
 type GetUpdateRule struct {
-	Number int  `json:"number" form:"id" binding:"required"`
+	Number float32  `json:"number" form:"number" binding:"required"`
+}
+
+type GetStoreRule struct {
+	Number float32 `json:"number" form:"number" binding:"required"`
 }

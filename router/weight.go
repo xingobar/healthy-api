@@ -12,4 +12,5 @@ func WeightRouter(group *gin.RouterGroup) {
 	group.GET("/", controller.Index)
 	group.GET("/:id", controller.Show)
 	group.PUT("/:id", controller.Update)
+	group.POST("/", controller.Store)
 }
