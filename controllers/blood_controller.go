@@ -102,7 +102,7 @@ func (c *bloodController) Update(ctx *gin.Context) {
     	return
 	}
 
-    ctx.JSON(http.StatusOK, gin.H{})
+    ctx.JSON(http.StatusOK, blood)
 }
 
 func (c *bloodController) Store(ctx *gin.Context) {
