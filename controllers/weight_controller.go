@@ -27,6 +27,7 @@ func (c *weightController) Index(ctx *gin.Context) {
 
 	if err := models.Db.Model(&models.Weight{}).
 		Scopes(models.Paginate(ctx.Request)).
+		Where("device_id = ? ", ctx.Param("deviceid")).
 		Find(&weights).Error; err != nil {
 
 			ctx.JSON(http.StatusBadGateway, gin.H{})
