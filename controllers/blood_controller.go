@@ -118,16 +118,18 @@ func (c *bloodController) Store(ctx *gin.Context) {
 		return
 	}
 
-	if err := models.Db.Create(&models.Blood{
+	var blood = models.Blood{
 		Pulse: json.Pulse,
 		Diastolic:json.Diastolic,
 		Systolic: json.Systolic,
 		DeviceId: ctx.Param("deviceid"),
-	}).Error; err != nil {
+	}
+
+	if err := models.Db.Create(&blood).Error; err != nil {
 
 		ctx.JSON(http.StatusBadGateway, gin.H{})
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{})
+	ctx.JSON(http.StatusOK, blood)
 }
