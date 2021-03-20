@@ -7,6 +7,7 @@ import (
 	"healthy-api/models"
 	"healthy-api/validation"
 	"healthy-api/validation/weight_validation"
+	"math"
 	"net/http"
 	"strconv"
 )
@@ -49,6 +50,7 @@ func (c *weightController) Index(ctx *gin.Context) {
 		"meta": map[string]interface{}{
 			"total": total,
 			"page": page,
+			"total_page": int(math.Ceil(float64(total) / 5.0)),
 		},
 	})
 }
