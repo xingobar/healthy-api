@@ -33,7 +33,7 @@ func Paginate(r *http.Request) func(db *gorm.DB) *gorm.DB{
 		limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
 
 		if limit == 0 {
-			limit = 5
+			limit = 20
 		}
 
 		return db.Offset((page - 1) * limit).Limit(limit)

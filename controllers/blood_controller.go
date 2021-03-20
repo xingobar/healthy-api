@@ -37,12 +37,18 @@ func (c *bloodController) Index(ctx *gin.Context) {
 		page = 1
 	}
 
+	limit, _ := strconv.Atoi(ctx.Request.URL.Query().Get("limit"))
+
+	if limit == 0 {
+		limit = 20
+	}
+
 	ctx.JSON(http.StatusOK, gin.H{
 		"data": bloods,
 		"meta": map[string]interface{} {
 			"total": total,
 			"page": page,
-			"total_page": int(math.Ceil(float64(total) / 5.0)),
+			"total_page": int(math.Ceil(float64(total) / float64(limit))),
 		},
 	})
 }
