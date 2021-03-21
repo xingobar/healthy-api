@@ -1,10 +1,12 @@
 package models
 
 import (
+	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	"net/http"
 	"strconv"
+	"os"
 )
 
 var Db *gorm.DB
@@ -13,8 +15,10 @@ var Db *gorm.DB
 
 func init() {
 	var err error
-
-	Db, err = gorm.Open("mysql", "root:@/healthy?charset=utf8&parseTime=true")
+	//"root:@/healthy?charset=utf8&parseTime=true"
+	Db, err = gorm.Open("mysql",
+			fmt.Sprintf("%s:%s@/%s?charset=utf8&parseTime=true",
+				os.Getenv("DB_USERNAME"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_DATABASE")))
 
 	if err != nil {
 		panic(err.Error())
